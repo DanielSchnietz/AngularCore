@@ -1,0 +1,227 @@
+<div class="flexContainer" *ngIf="!dataSubmitted">
+  <form class="formContainer" [formGroup]="frm" (ngSubmit)="submitCalculation()">
+    <mat-form-field class="flexItem">
+      <mat-label> Offer No.(disabled)</mat-label>
+      <input matInput disabled value=0123456>
+    </mat-form-field>
+    <mat-form-field class="flexItem">
+      <mat-label>Company (disabled)</mat-label>
+      <input matInput disabled value="Google">
+    </mat-form-field>
+    <div formArrayName="items" class="flexGroup">
+      <div *ngFor="let item of items.controls; let i=index" id={{item}}>
+        <div [formGroupName]="i">
+          <span>
+            <mat-form-field class="flexGroupItem">
+              <mat-label>Item No.</mat-label>
+              <input matInput formControlName="itemNoFormControl">
+              <mat-error *ngIf="items.controls[i].get('itemNoFormControl').hasError('pattern')">
+                Der Produktname darf keine Sonderzeichen enthalten
+              </mat-error>
+            </mat-form-field>
+          </span>
+          <span>
+            <mat-form-field class="flexGroupItem">
+              <mat-label>Item Description</mat-label>
+              <input matInput formControlName="itemDescFormControl">
+              <mat-error *ngIf="items.controls[i].get('itemDescFormControl').hasError('pattern') && !items.controls[i].get('itemDescFormControl').hasError('required')">
+                Der Produktname darf keine Sonderzeichen enthalten
+              </mat-error>
+              <mat-error *ngIf="items.controls[i].get('itemDescFormControl').hasError('required')">
+                Es wird ein Produktname benötigt
+              </mat-error>
+            </mat-form-field>
+          </span>
+          <span>
+            <mat-form-field class="flexGroupItem">
+              <mat-label>Amount</mat-label>
+              <input type="number" matInput formControlName="itemAmountFormControl">
+              <mat-error *ngIf="items.controls[i].get('itemAmountFormControl').hasError('min') && !items.controls[i].get('itemAmountFormControl').hasError('required')">
+                Die Stückzahl darf nicht negativ sein
+              </mat-error>
+              <mat-error *ngIf="items.controls[i].get('itemAmountFormControl').hasError('required')">
+                Es wird eine Stückzahl benötigt
+              </mat-error>
+            </mat-form-field>
+          </span>
+          <span>
+            <mat-form-field class="flexGroupItem">
+              <mat-label>Price</mat-label>
+              <input type="number" matInput formControlName="itemPriceFormControl">
+              <mat-error *ngIf="items.controls[i].get('itemPriceFormControl').hasError('min') && !items.controls[i].get('itemPriceFormControl').hasError('required')">
+                Darf nicht negativ sein
+              </mat-error>
+              <mat-error *ngIf="items.controls[i].get('itemAmountFormControl').hasError('required')">
+                Dieses Feld wird benötigt
+              </mat-error>
+            </mat-form-field>
+          </span>
+          <button type="button" mat-mini-fab color="warn" aria-label="Example icon button with a menu icon" (click)="deleteItem(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="dividerBtn">
+      <button type="button" mat-stroked-button color="primary" (click)="addItem()">Add Item</button>
+    </div>
+    <div>
+      <mat-form-field class="example-full-width">
+        <mat-label>Material overhead</mat-label>
+        <input type="number" matInput formControlName="matOverheadFormControl">
+      </mat-form-field>
+    </div>
+    <div formArrayName="steps" class="flexGroup">
+      <div *ngFor="let step of steps.controls; let i=index" class="example-full-width" id={{step}}>
+        <div [formGroupName]="i">
+          <span>
+            <mat-form-field class="flexGroupItem">
+              <mat-label>Step No.</mat-label>
+              <input matInput formControlName="stepNoFormControl">
+            </mat-form-field>
+          </span>
+          <span>
+            <mat-form-field class="flexGroupItem">
+              <mat-label>Step Description</mat-label>
+              <input matInput formControlName="stepDescFormControl">
+            </mat-form-field>
+          </span>
+          <span>
+            <mat-form-field class="flexGroupItem">
+              <mat-label>Time</mat-label>
+              <input type="number" matInput formControlName="stepTimeFormControl">
+              <mat-error *ngIf="steps.controls[i].get('stepTimeFormControl').hasError('min') && !steps.controls[i].get('stepTimeFormControl').hasError('required')">
+                Darf nicht negativ sein
+              </mat-error>
+              <mat-error *ngIf="steps.controls[i].get('stepTimeFormControl').hasError('required')">
+                Dieses Feld wird benötigt
+              </mat-error>
+            </mat-form-field>
+          </span>
+          <span>
+            <mat-form-field class="flexGroupItem">
+              <mat-label>Price</mat-label>
+              <input type="number" matInput formControlName="stepPriceFormControl">
+              <mat-error *ngIf="steps.controls[i].get('stepPriceFormControl').hasError('min') && !steps.controls[i].get('stepPriceFormControl').hasError('required')">
+                Darf nicht negativ sein
+              </mat-error>
+              <mat-error *ngIf="steps.controls[i].get('stepPriceFormControl').hasError('required')">
+                Dieses Feld wird benötigt
+              </mat-error>
+            </mat-form-field>
+          </span>
+          <button type="button" mat-mini-fab color="warn" aria-label="Example icon button with a menu icon" (click)="delete<step(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="dividerBtn">
+      <button type="button" mat-stroked-button color="primary" (click)="addStep()">Add Step</button>
+    </div>
+    <div>
+      <mat-form-field class="example-full-width">
+        <mat-label>Production overhead</mat-label>
+        <input type="number" matInput formControlName="prodOverheadFormControl">
+        <mat-error *ngIf="prodOverheadFormControl.hasError('min') && !prodOverheadFormControl.hasError('required')">
+          Darf nicht negativ sein
+        </mat-error>
+        <mat-error *ngIf="prodOverheadFormControl.hasError('required')">
+          Dieses Feld wird benötigt
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="flexGroup">
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Administrative overhead</mat-label>
+          <input type="number" matInput formControlName="adminOverheadFormControl">
+          <mat-error *ngIf="adminOverheadFormControl.hasError('min') && !adminOverheadFormControl.hasError('required')">
+            Darf nicht negativ sein
+          </mat-error>
+          <mat-error *ngIf="adminOverheadFormControl.hasError('required')">
+            Dieses Feld wird benötigt
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Selling expenses</mat-label>
+          <input type="number" matInput formControlName="sellExpFormControl">
+          <mat-error *ngIf="sellExpFormControl.hasError('min') && !sellExpFormControl.hasError('required')">
+            Darf nicht negativ sein
+          </mat-error>
+          <mat-error *ngIf="sellExpFormControl.hasError('required')">
+            Dieses Feld wird benötigt
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Profit markup</mat-label>
+          <input type="number" matInput formControlName="profMarkFormControl">
+          <mat-error *ngIf="profMarkFormControl.hasError('min') && !profMarkFormControl.hasError('required')">
+            Darf nicht negativ sein
+          </mat-error>
+          <mat-error *ngIf="profMarkFormControl.hasError('required')">
+            Dieses Feld wird benötigt
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Cash discount</mat-label>
+          <input type="number" matInput formControlName="cashDiscFormControl">
+          <mat-error *ngIf="cashDiscFormControl.hasError('min') && !cashDiscFormControl.hasError('required')">
+            Darf nicht negativ sein
+          </mat-error>
+          <mat-error *ngIf="cashDiscFormControl.hasError('required')">
+            Dieses Feld wird benötigt
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="flexGroup">
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Agents commission</mat-label>
+          <input type="number" matInput formControlName="agentsCommFormControl">
+          <mat-error *ngIf="agentsCommFormControl.hasError('min') && !agentsCommFormControl.hasError('required')">
+            Darf nicht negativ sein
+          </mat-error>
+          <mat-error *ngIf="agentsCommFormControl.hasError('required')">
+            Dieses Feld wird benötigt
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Customer discount</mat-label>
+          <input type="number" matInput formControlName="custDiscountFormControl">
+          <mat-error *ngIf="custDiscountFormControl.hasError('min') && !custDiscountFormControl.hasError('required')">
+            Darf nicht negativ sein
+          </mat-error>
+          <mat-error *ngIf="custDiscountFormControl.hasError('required')">
+            Dieses Feld wird benötigt
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Sales tax</mat-label>
+          <input type="number" matInput formControlName="salesTaxFormControl">
+          <mat-error *ngIf="salesTaxFormControl.hasError('min') && !salesTax.hasError('required')">
+            Darf nicht negativ sein
+          </mat-error>
+          <mat-error *ngIf="salesTaxFormControl.hasError('required')">
+            Dieses Feld wird benötigt
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="dividerBtn">
+      <button [disabled]="!frm.valid" mat-stroked-button color="primary">Calculate</button>
+    </div>
+    
+  </form>
+</div>

@@ -1,0 +1,12 @@
+<table>
+  <tr>
+    <th>Kalkulationsposition</th>
+    <th>Zuschläge in %</th>
+    <th>Zuschläge in €</th>
+  </tr>
+  <tr *ngFor="let position of calculatedData">
+    <td>{{position.description}}</td>
+    <td>{{position.percentage}}</td>
+    <td>{{position.value}}</td>
+  </tr>
+</table>

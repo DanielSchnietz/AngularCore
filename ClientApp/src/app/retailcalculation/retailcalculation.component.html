@@ -1,0 +1,83 @@
+<div class="flexContainer">
+  <form class="formContainer" [formGroup]="frm" (ngSubmit)="submitCalculation()">
+    <mat-form-field class="flexItem">
+      <mat-label> Kalkulation Nr.(disabled)</mat-label>
+      <input matInput disabled value=0123456>
+    </mat-form-field>
+    <mat-form-field class="flexItem">
+      <mat-label>Produkt (disabled)</mat-label>
+      <input matInput disabled value="Google">
+    </mat-form-field>
+    <div *ngIf="calcDirection==='forward'">
+      <mat-form-field class="example-full-width">
+        <mat-label>Listeneinkaufspreis</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </div>
+    <div *ngIf="calcDirection==='backward'">
+      <mat-form-field class="example-full-width">
+        <mat-label>Bruttoverkaufspreis</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="example-full-width">
+        <mat-label>Lieferrabatt</mat-label>
+        <input matInput formControlName="prodOverheadFormControl">
+      </mat-form-field>
+    </div>
+    <div class="flexGroup">
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Lieferskonto</mat-label>
+          <input matInput formControlName="adminOverheadFormControl">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Bezugskosten</mat-label>
+          <input matInput formControlName="sellExpFormControl">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Handlungskostenzuschlag</mat-label>
+          <input matInput formControlName="profMarkFormControl">
+        </mat-form-field>
+      </div>
+      <div *ngIf="calculationType !='difference'">
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Gewinnzuschlag</mat-label>
+          <input matInput formControlName="cashDiscFormControl">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="flexGroup">
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Kundenskonto</mat-label>
+          <input matInput formControlName="agentsCommFormControl">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Vertreterprovision</mat-label>
+          <input matInput formControlName="custDiscountFormControl">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Kundenrabatt</mat-label>
+          <input matInput formControlName="salesTaxFormControl">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="flexGroupItem">
+          <mat-label>Umsatzsteuer</mat-label>
+          <input matInput formControlName="salesTaxFormControl">
+        </mat-form-field>
+      </div>
+      <button mat-stroked-button color="primary">Calculate</button>
+    </div>
+  </form>
+</div>
