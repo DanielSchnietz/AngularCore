@@ -56,14 +56,14 @@
               </mat-error>
             </mat-form-field>
           </span>
-          <button type="button" mat-mini-fab color="warn" aria-label="Example icon button with a menu icon" (click)="deleteItem(i)">
+          <button type="button" mat-mini-fab color="warn" aria-label="Example icon button with a menu icon" (click)="deleteInput(i, 'items')">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
     </div>
     <div class="dividerBtn">
-      <button type="button" mat-stroked-button color="primary" (click)="addItem()">Add Item</button>
+      <button type="button" mat-stroked-button color="primary" (click)="addInput('items')">Add Item</button>
     </div>
     <div>
       <mat-form-field class="example-full-width">
@@ -110,14 +110,14 @@
               </mat-error>
             </mat-form-field>
           </span>
-          <button type="button" mat-mini-fab color="warn" aria-label="Example icon button with a menu icon" (click)="delete<step(i)">
+          <button type="button" mat-mini-fab color="warn" aria-label="Example icon button with a menu icon" (click)="deleteInput(i, 'steps')">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
     </div>
     <div class="dividerBtn">
-      <button type="button" mat-stroked-button color="primary" (click)="addStep()">Add Step</button>
+      <button type="button" mat-stroked-button color="primary" (click)="addInput('steps')">Add Step</button>
     </div>
     <div>
       <mat-form-field class="example-full-width">

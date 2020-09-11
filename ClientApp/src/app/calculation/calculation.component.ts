@@ -2,7 +2,7 @@ import { Component, OnInit, Inject} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as uuid from 'uuid';
 import { CalculationService } from '../services/calculate.service'
-import { FormControl, Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import {FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 
 
 
@@ -14,7 +14,7 @@ import { FormControl, Validators, FormGroup, FormBuilder, FormArray } from '@ang
 
 
 export class CalculationComponent implements OnInit {
-
+  public apiResponse = null;
   public dataSubmitted = false
 
   frm = this.fb.group({
@@ -125,8 +125,7 @@ export class CalculationComponent implements OnInit {
     })
   }
   public addStep(): void {
-    this.steps.push(this.createStepGroup())
-    
+    this.steps.push(this.createStepGroup())  
   }
 
   public deleteStep(index): void {
