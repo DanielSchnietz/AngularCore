@@ -7,17 +7,23 @@ export class PreliminaryCalculation implements Deserializable{
   public DirectProductionCost: number;
   public ProductionOverhead: number;
   public ProductionCost: number;
+  public ManufacturingCost: number;
   public AdministrativeOverhead: number
   public SellingExpenses: number;
   public SelfCost: number;
   public ProfitMarkup: number;
-  public CashSelfPrice: number;
+  public Profit: number;
+  public CashSalePrice: number;
   public CashDiscount: number;
+  public CashDiscountPercentage: number;
   public AgentsCommission: number;
-  public TargetSalePrice: number
+  public AgentsCommissionPercentage: number;
+  public TargetSalePrice: number;
   public CustomerDiscount: number;
+  public CustomerDiscountPercentage: number;
   public ListPrice: number;
   public SalesTax: number;
+  public SalesTaxPercentage: number;
   public OfferPrice: number;
 
 
