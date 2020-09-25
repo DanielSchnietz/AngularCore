@@ -7,9 +7,9 @@ namespace AngularWebApp.Services
 {
     public class Item
     {
-        public int ItemNo;
-        public string ItemDesc;
-        public int Amount;
-        public int Price;
+        public string ItemNo { get; set; }
+        public string ItemDesc { get; set; }
+        public double Amount { get; set; }
+        public double Price { get; set; }
     }
 }

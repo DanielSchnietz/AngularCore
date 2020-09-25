@@ -7,9 +7,9 @@ namespace AngularWebApp.Services
 {
     public class Step
     {
-        public string StepNo;
-        public string StepDesc;
-        public int Time;
-        public int Price;
+        public string StepNo { get; set; }
+        public string StepDesc { get; set; }
+        public double Amount { get; set; }
+        public double Price { get; set; }
     }
 }

@@ -14,10 +14,10 @@ import { map, catchError } from 'rxjs/operators';
 export class CalculationService {
   constructor(private http: HttpClient) { }
 
-  public getPreliminaryCalculation(): Observable<PreliminaryCalculation> {
-    return this.http.post<PreliminaryCalculation>("http://localhost:3000/api/calculation/").pipe(
-      map(data => new PreliminaryCalculation().deserialize(data)),
-      catchError(() => throwError('User not found'))
-    );
-  }
+  //public getPreliminaryCalculation(): Observable<PreliminaryCalculation> {
+    //return this.http.post<PreliminaryCalculation>("http://localhost:3000/api/calculation/").pipe(
+     // map(data => new PreliminaryCalculation().deserialize(data)),
+    //  catchError(() => throwError('User not found'))
+  //  );
+ // }
 }
