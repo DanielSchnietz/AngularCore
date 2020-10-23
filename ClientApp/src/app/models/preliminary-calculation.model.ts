@@ -25,6 +25,7 @@ export class PreliminaryCalculation implements Deserializable{
   public SalesTax: number;
   public SalesTaxPercentage: number;
   public OfferPrice: number;
+    actions: any;
 
 
   public deserialize(input: any):this {

@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AngularWebApp.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.IO;
-using System.Text;
 using Newtonsoft.Json;
-using Google.Cloud.Firestore;
 using AngularWebApp.Repositorys;
 
 namespace AngularWebApp.Controllers
@@ -22,32 +14,55 @@ namespace AngularWebApp.Controllers
 
         [HttpPost]
         //JSON Formatierung hinzufügen
-        public async Task<CalculationDetailDTO> ReadStringDataManual(InputObject content)
+        public async Task<IActionResult> AddNewCalculation([FromBody] InputObject content)
         {
-            var calc = new Calculate(content);
-            return await calc.ForwardCalculation();
+            if(content == null)
+            {
+                return BadRequest("Calculation Object is null");
+            }
+            else
+            {
+                var response = await Calculate.CreateCalculation(content);
+                return Created($"api/calculate/{response.Id}", JsonConvert.SerializeObject(response));
+            }
+
 
         }
         [HttpGet]
-        public async Task<List<CalculationDetailDTO>> GetAllCalculations()
+        public async Task<IActionResult> GetAllCalculations()
         {
             var db = new DatabaseAccess();
-
-            return await db.GetCalculation();
+            var calculation = await db.GetCalculation();
+            if (calculation == null)
+            {
+                return BadRequest("No calculation found");
+            }
+            return Ok(calculation);
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<CalculationDetailDTO>> GetCalculationById(string id)
+        public async Task<IActionResult> GetCalculationById(string id)
         {
-            var db = new DatabaseAccess();
 
-            return await db.GetCalculationById(id);
+            var db = new DatabaseAccess();
+            var calculation = await db.GetCalculationById(id);
+            if (calculation == null)
+            {
+                return BadRequest($"No calculation with Id {id} found");
+            }
+            return Ok(calculation);
         }
        [HttpDelete("{id}")]
        public async Task<ActionResult> DeleteCalculation(string id)
         {
             var db = new DatabaseAccess();
             await db.DeleteCalculationWithId(id);
-            return Ok();
+            return NoContent();
         }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> ChangeCalculation(string id, [FromBody]InputObject calculation)
+       // {
+         //   var db = new DatabaseAccess();
+         //   await db.ChangeCalculationById(id, calculation);
+       // }
     }
 }

@@ -1,12 +1,8 @@
-<table>
-  <tr>
-    <th>Kalkulationsposition</th>
-    <th>Zuschläge in %</th>
-    <th>Zuschläge in €</th>
-  </tr>
-  <tr *ngFor="let position of calculatedData">
-    <td>{{position.description}}</td>
-    <td>{{position.percentage}}</td>
-    <td>{{position.value}}</td>
-  </tr>
-</table>
+
+<div>
+  Kalkulation
+  <div *ngIf="calculation$ | async as calculation">
+    <p>{{calculation.MaterialOverheadPercentage}}</p>
+    <p></p>
+  </div>
+</div>

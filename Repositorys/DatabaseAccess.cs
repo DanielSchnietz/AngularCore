@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AngularWebApp.Services;
 using Google.Cloud.Firestore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AngularWebApp.Repositorys
 {
@@ -41,7 +42,7 @@ namespace AngularWebApp.Repositorys
             DocumentSnapshot snapshot = await document.GetSnapshotAsync();
             return snapshot.ConvertTo<CalculationDetailDTO>();
         }
-        public async Task<CalculationDetailDTO> AddCalculation(CalculationDetailDTO calculation)
+        public async Task<CalculationDetailDTO> AddCalculation(CalculationDbDTO calculation)
         {
             FirestoreDb db = FirestoreDb.Create(Project);
             CollectionReference collection = db.Collection("Calculations");
@@ -51,15 +52,22 @@ namespace AngularWebApp.Repositorys
             output.Id = document.Id;
             return output;
         }
-       // public async Task ChangeCalculation(string Id)
-       // {
+        public async Task<CalculationDetailDTO> ChangeCalculationById(string Id, CalculationDbDTO calculation)
+        {
+            FirestoreDb db = FirestoreDb.Create(Project);
+            DocumentReference calcRef = db.Collection("Calculations").Document(Id); 
+             await calcRef.SetAsync(calculation);
+            DocumentSnapshot snapshot = await calcRef.GetSnapshotAsync();
+            return snapshot.ConvertTo<CalculationDetailDTO>();
 
-       // }
+
+        }
         public async Task DeleteCalculationWithId(string Id)
         {
             FirestoreDb db = FirestoreDb.Create(Project);
             DocumentReference document = db.Collection("Calculations").Document(Id);
             await document.DeleteAsync();
+            
         }
     }
 }

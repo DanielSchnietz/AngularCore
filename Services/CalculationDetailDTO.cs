@@ -10,9 +10,9 @@ namespace AngularWebApp.Services
     public class CalculationDetailDTO
     {
         [FirestoreProperty]
-        public string? Id { get; set;}
-        [FirestoreProperty]
-        public double MaterialDirectCost { get; set; }
+        public string Id { get; set;}
+        //[FirestoreProperty]
+       // public double MaterialDirectCost { get; set; }
         [FirestoreProperty]
         public double MaterialOverheadPercentage { get; set; }
         [FirestoreProperty]

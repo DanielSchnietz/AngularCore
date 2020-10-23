@@ -29,6 +29,7 @@
     <None Remove="ClientApp\src\app\inputData.ts" />
     <None Remove="ClientApp\src\app\models\deserializable.model.ts" />
     <None Remove="ClientApp\src\app\models\preliminary-calculation.model.ts" />
+    <None Remove="ClientApp\src\app\models\RequestDTO.ts" />
     <None Remove="ClientApp\src\app\services\calculate.service.ts" />
   </ItemGroup>
 
@@ -36,6 +37,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\inputData.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\deserializable.model.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\preliminary-calculation.model.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\models\RequestDTO.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\calculate.service.ts" />
   </ItemGroup>
 

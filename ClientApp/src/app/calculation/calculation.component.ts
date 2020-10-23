@@ -3,6 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import * as uuid from 'uuid';
 import { CalculationService } from '../services/calculate.service'
 import {FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { PreliminaryCalculation } from '../models/preliminary-calculation.model';
+import { map } from 'rxjs/operators'
+
 
 
 
@@ -16,45 +20,46 @@ import {FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 export class CalculationComponent implements OnInit {
   public apiResponse = null;
   public dataSubmitted = false
+  public calculation$: Observable<any>;
 
   frm = this.fb.group({
     items: this.fb.array([
       this.createItemGroup()
     ]),
-    matOverheadFormControl : [null],
+    materialOverheadPercentage : [null],
     steps: this.fb.array([
       this.createStepGroup()
     ]),
     
-    prodOverheadFormControl : [null, [
+    productionOverheadPercentage : [null, [
       Validators.required,
       Validators.min(0)
     ]],
-    adminOverheadFormControl : [null, [
+    administrativeOverheadPercentage : [null, [
       Validators.required,
       Validators.min(0)
     ]],
-    sellExpFormControl : [null, [
+    sellingExpensesPercentage: [null, [
       Validators.required,
       Validators.min(0)
     ]],
-    profMarkFormControl : [null, [
+    profitMarkup : [null, [
       Validators.required,
       Validators.min(0)
     ]],
-    cashDiscFormControl : [null, [
+    cashDiscountPercentage : [null, [
       Validators.required,
       Validators.min(0)
     ]],
-    agentsCommFormControl : [null, [
+    agentsCommissionPercentage : [null, [
       Validators.required,
       Validators.min(0)
     ]],
-    custDiscountFormControl : [null, [
+    customerDiscountPercentage : [null, [
       Validators.required,
       Validators.min(0)
     ]],
-    salesTaxFormControl : [null, [
+    salesTaxPercentage : [null, [
       Validators.required,
       Validators.min(0)
     ]]
@@ -68,14 +73,14 @@ export class CalculationComponent implements OnInit {
 
   get steps(): FormArray { return this.frm.get('steps') as FormArray; }
   //MaterialOverhead
-  get prodOverheadFormControl() { return this.frm.get('prodOverheadFormControl') }
-  get adminOverheadFormControl() { return this.frm.get('adminOverheadFormControl') }
-  get sellExpFormControl() { return this.frm.get('sellExpFormControl') }
-  get profMarkFormControl() { return this.frm.get('profMarkFormControl') }
-  get cashDiscFormControl() { return this.frm.get('cashDiscFormControl') }
-  get agentsCommFormControl() { return this.frm.get('agentsCommFormControl') }
-  get custDiscountFormControl() { return this.frm.get('custDiscountFormControl') }
-  get salesTaxFormControl() { return this.frm.get('salesTaxFormControl') }
+  get productionOverheadPercentage() { return this.frm.get('productionOverheadPercentage') }
+  get administrativeOverheadPercentage() { return this.frm.get('administrativeOverheadPercentage') }
+  get sellingExpensesPercentage() { return this.frm.get('sellingExpensesPercentage') }
+  get profitMarkup() { return this.frm.get('profitMarkup') }
+  get cashDiscountPercentage() { return this.frm.get('cashDiscountPercentage') }
+  get agentsCommissionPercentage() { return this.frm.get('agentsCommissionPercentage') }
+  get customerDiscountPercentage() { return this.frm.get('customerDiscountPercentage') }
+  get salesTaxPercentage() { return this.frm.get('salesTaxPercentage') }
 
   public addItem() {
     this.items.push(this.createItemGroup());
@@ -87,18 +92,18 @@ export class CalculationComponent implements OnInit {
 
   private createItemGroup() {
     return this.fb.group({
-      itemNoFormControl: ['', [
+      itemNo: ['', [
         Validators.pattern('[a-zA-Z0-9-/]*')
       ]],
-      itemDescFormControl: ['', [
+      itemDesc: ['', [
         Validators.required,
         Validators.pattern('[a-zA-Z0-9-/]*')
       ]],
-      itemAmountFormControl: [null, [
+      amount: [null, [
         Validators.required,
         Validators.min(0)
       ]],
-      itemPriceFormControl: [null, [
+      price: [null, [
         Validators.required,
         Validators.min(0)
       ]],
@@ -107,18 +112,18 @@ export class CalculationComponent implements OnInit {
 
   private createStepGroup() {
     return this.fb.group({
-      stepNoFormControl: ['', [
+      stepNo: ['', [
         Validators.pattern('[a-zA-Z0-9-/]*')
       ]],
-      stepDescFormControl: ['', [
+      stepDesc: ['', [
         Validators.required,
         Validators.pattern('[a-zA-Z0-9-/]*')
       ]],
-      stepTimeFormControl: [null, [
+      amount: [null, [
         Validators.required,
         Validators.min(0)
       ]],
-      stepPriceFormControl: [null, [
+      price: [null, [
         Validators.required,
         Validators.min(0)
       ]]
@@ -133,10 +138,13 @@ export class CalculationComponent implements OnInit {
     this.steps.removeAt(index)
   }
 
-  public submitCalculation(): void {
-    //this.calculationService.getCalculatedData(this.frm.value)
+  public submitCalculation(e):void{
+    
+    e.preventDefault()
+  
+    this.calculation$ = this.calculationService.getCalculatedData(this.frm.value)
     this.dataSubmitted = true
-console.log(this.frm.value)
+    console.log(this.calculation$)
     };
 
   ngOnInit() {

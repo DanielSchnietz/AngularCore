@@ -10,127 +10,78 @@ using System.Xml.Serialization;
 
 namespace AngularWebApp.Services
 {
-    public class Calculate
+    public static class Calculate
     {
-        private IEnumerable<Item> Items;
-        private IEnumerable<Step> Steps;
-        private double MaterialDirectCost;
-        private double MaterialOverheadPercentage;
-        private double MaterialOverhead;
-        private double MaterialCost;
-        private double ProductionDirectCost;
-        private double ProductionOverheadPercentage;
-        private double ProductionOverhead;
-        private double ProductionCost;
-        private double ManufacturingCost;
-        private double AdministrativeOverheadPercentage;
-        private double AdministrativeOverhead;
-        private double SellingExpensesPercentage;
-        private double SellingExpenses;
-        private double SelfCost;
-        private double ProfitMarkup;
-        private double Profit;
-        private double CashSalePrice;
-        private double CashDiscount;
-        private double CashDiscountPercentage;
-        private double AgentsCommission;
-        private double AgentsCommissionPercentage;
-        private double TargetSalePrice;
-        private double CustomerDiscount;
-        private double CustomerDiscountPercentage;
-        private double ListPrice;
-        private double SalesTax;
-        private double SalesTaxPercentage;
-        private double OfferPrice;
-        private double Time;
-
-        public Calculate(InputObject inputObject)
+        public static async Task<CalculationDetailDTO> CreateCalculation(InputObject input)
         {
-            Items = inputObject.Items;
-            MaterialOverheadPercentage = inputObject.MaterialOverheadPercentage;
-            Steps = inputObject.Steps;
-            ProductionOverheadPercentage = inputObject.ProductionOverheadPercentage;
-            AdministrativeOverheadPercentage = inputObject.AdministrativeOverheadPercentage;
-            SellingExpensesPercentage = inputObject.SellingExpensesPercentage;
-            ProfitMarkup = inputObject.ProfitMarkup;
-            CashDiscountPercentage = inputObject.CustomerDiscountPercentage;
-            AgentsCommissionPercentage = inputObject.AgentsCommissionPercentage;
-            CustomerDiscountPercentage = inputObject.CustomerDiscountPercentage;
-            SalesTaxPercentage = inputObject.SalesTaxPercentage;
+            
+            var db = new DatabaseAccess();
+            var calc = ForwardCalculation(input);
+            return await db.AddCalculation(calc);
         }
-        public async Task<CalculationDetailDTO> ForwardCalculation()
+
+        public static async Task UpdateCalculation(string Id, InputObject input)
+        {
+            var db = new DatabaseAccess();
+         var calculation =  ForwardCalculation(input);
+            await db.ChangeCalculationById(Id, calculation );
+        }
+    
+        public static CalculationDbDTO ForwardCalculation(InputObject input)
         {
             var data = new DatabaseAccess();
-            var calcOverhead = new PercentageCalculation();
+            //var calcOverhead = new PercentageCalculation();
             var calcCost = new Calculation();
-            var matDirect = CalcDirectCost(Items);
-            var prodDirect = CalcDirectCost(Steps);
-            MaterialDirectCost =  await matDirect;
-            ProductionDirectCost =  await prodDirect;
-            MaterialOverhead = calcOverhead.Multiply(MaterialDirectCost, MaterialOverheadPercentage);
-            ProductionOverhead = calcOverhead.Multiply(ProductionDirectCost, ProductionOverheadPercentage);
-            MaterialCost = calcCost.Add(MaterialDirectCost, MaterialOverhead);
-            ProductionCost = calcCost.Add(ProductionDirectCost, ProductionOverhead);
-            ManufacturingCost = calcCost.Add(MaterialCost, ProductionCost);
-            AdministrativeOverhead = calcOverhead.Multiply(ManufacturingCost, AdministrativeOverheadPercentage);
-            SellingExpenses = calcOverhead.Multiply(ManufacturingCost, SellingExpensesPercentage);
-            SelfCost = calcCost.Add(ManufacturingCost, AdministrativeOverhead, SellingExpenses);
-            Profit = calcOverhead.Multiply(SelfCost, ProfitMarkup);
-            CashSalePrice = calcCost.Add(SelfCost, Profit);
-            CashDiscount = calcOverhead.Multiply(CashSalePrice, CashDiscountPercentage);
-            AgentsCommission = calcOverhead.Multiply(CashSalePrice, AdministrativeOverheadPercentage);
-            TargetSalePrice = calcCost.Add(CashSalePrice, CashDiscount, AgentsCommission);
-            CustomerDiscount = calcOverhead.Multiply(TargetSalePrice, CustomerDiscountPercentage);
-            ListPrice = calcCost.Add(TargetSalePrice, CustomerDiscount);
-            SalesTax = calcOverhead.Multiply(ListPrice, SalesTaxPercentage);
-            OfferPrice = calcCost.Add(ListPrice, SalesTax);
+            var matDirect = CalcDirectCost(input.Items);
+            var prodDirect = CalcDirectCost(input.Steps);
+            var calculation = new CalculationDbDTO();
+            //change calculation object to input object to calculate %
+            calculation.MaterialDirectCost =  matDirect;
+            calculation.ProductionDirectCost = prodDirect;
+            calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
+            calculation.ProductionOverheadPercentage = input.ProductionOverheadPercentage;
+            calculation.MaterialOverhead = calcCost.Multiply(calculation.MaterialDirectCost, input.MaterialOverheadPercentage) / 100;
+            calculation.ProductionOverhead = calcCost.Multiply(calculation.ProductionDirectCost, input.ProductionOverheadPercentage) / 100;
+            calculation.MaterialCost = calcCost.Add(calculation.MaterialDirectCost, calculation.MaterialOverhead);
+            calculation.ProductionCost =calcCost.Add (calculation.ProductionDirectCost, calculation.ProductionOverhead);
+            calculation.ManufacturingCost = calcCost.Add(calculation.MaterialCost, calculation.ProductionCost);
+            calculation.AdministrativeOverhead = calcCost.Multiply(calculation.ManufacturingCost, input.AdministrativeOverheadPercentage)/100;
+            calculation.AdministrativeOverheadPercentage = input.AdministrativeOverheadPercentage;
+            calculation.SellingExpenses = calcCost.Multiply(calculation.ManufacturingCost, input.SellingExpensesPercentage)/100;
+            calculation.SellingExpensesPercentage = input.SellingExpensesPercentage;
+            calculation.SelfCost = calcCost.Add(calculation.ManufacturingCost, calculation.AdministrativeOverhead, calculation.SellingExpenses);
+            calculation.Profit = calcCost.Multiply(calculation.SelfCost, input.ProfitMarkup)/100;
+            calculation.ProfitMarkup = input.ProfitMarkup;
+            calculation.CashSalePrice = calcCost.Add(calculation.SelfCost, calculation.Profit);
+            calculation.CashDiscount = calcCost.Multiply(calculation.CashSalePrice, input.CashDiscountPercentage)/100;
+            calculation.CashDiscountPercentage = input.CashDiscountPercentage;
+            calculation.AgentsCommission = calcCost.Multiply(calculation.CashSalePrice, input.AdministrativeOverheadPercentage)/100;
+            calculation.AgentsCommissionPercentage = input.AgentsCommissionPercentage;
+            calculation.TargetSalePrice = calcCost.Add(calculation.CashSalePrice, calculation.CashDiscount, calculation.AgentsCommission);
+            calculation.CustomerDiscount = calcCost.Multiply(calculation.TargetSalePrice, input.CustomerDiscountPercentage)/100;
+            calculation.CustomerDiscountPercentage = input.CustomerDiscountPercentage;
+            calculation.ListPrice = calcCost.Add(calculation.TargetSalePrice, calculation.CustomerDiscount);
+            calculation.SalesTax = calcCost.Multiply(calculation.ListPrice, input.SalesTaxPercentage)/100;
+            calculation.SalesTaxPercentage = input.SalesTaxPercentage;
+            calculation.OfferPrice = calcCost.Add(calculation.ListPrice, calculation.SalesTax);
 
-            var calculation = GetCalculationDetailDTO();
-            return await data.AddCalculation(calculation);
+
+
+            return calculation;
+        }
+            
             //put everything to db
-    }
+    
     
 
 
-        public CalculationDetailDTO GetCalculationDetailDTO()
-        {
-            return new CalculationDetailDTO
-            {
-                MaterialDirectCost = Math.Round(MaterialDirectCost, 2),
-                MaterialOverheadPercentage = Math.Round(MaterialOverheadPercentage, 2),
-                MaterialOverhead = Math.Round(MaterialOverhead, 2),
-                MaterialCost = Math.Round(MaterialCost, 2),
-                ProductionDirectCost = Math.Round(ProductionDirectCost, 2),
-                ProductionOverheadPercentage = Math.Round(ProductionOverheadPercentage, 2),
-                ProductionOverhead = Math.Round(ProductionOverhead, 2),
-                ProductionCost = Math.Round(ProductionCost, 2),
-                ManufacturingCost = Math.Round(ManufacturingCost, 2),
-                AdministrativeOverheadPercentage = Math.Round(AdministrativeOverheadPercentage, 2),
-                AdministrativeOverhead = Math.Round(AdministrativeOverhead, 2),
-                SellingExpensesPercentage = Math.Round(SellingExpensesPercentage, 2),
-                SellingExpenses = Math.Round(SellingExpenses, 2),
-                SelfCost = Math.Round(SelfCost, 2),
-                ProfitMarkup = Math.Round(ProfitMarkup, 2),
-                Profit = Math.Round(Profit, 2),
-                CashSalePrice = Math.Round(CashSalePrice, 2),
-                CashDiscount = Math.Round(CashDiscount, 2),
-                CashDiscountPercentage = Math.Round(CashDiscountPercentage, 2),
-                AgentsCommission = Math.Round(AgentsCommission, 2),
-                AgentsCommissionPercentage = Math.Round(AgentsCommissionPercentage, 2),
-                TargetSalePrice = Math.Round(TargetSalePrice, 2),
-                CustomerDiscount = Math.Round(CustomerDiscount, 2),
-                CustomerDiscountPercentage = Math.Round(CustomerDiscountPercentage, 2),
-                ListPrice = Math.Round(ListPrice, 2),
-                SalesTax = Math.Round(SalesTax, 2),
-                SalesTaxPercentage = Math.Round(SalesTaxPercentage, 2),
-                OfferPrice = Math.Round(OfferPrice, 2)
-        };  
-    }
-        private Task<double> CalcDirectCost(dynamic obj)
+
+
+        private static double CalcDirectCost(dynamic obj)
         {
             //double result;
-            var task = Task.Run(() =>
-            {
+            //var task = Task.Run(() =>
+            //{
                 var calc = new Calculation();
                 double res = 0;
                 foreach (var item in obj)
@@ -138,8 +89,8 @@ namespace AngularWebApp.Services
                     res += calc.Multiply(item.Price, item.Amount);
                 };
                 return res;
-            });
-            return task;
+            //});
+            //return task;
         }
     }
 }
