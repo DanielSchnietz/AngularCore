@@ -1,9 +1,9 @@
 # AngularCoreApp
-Frontend with Angular and Angular Material
-Backend C#.NET Core API
+Frontend with Angular and Angular Material |
+Backend C#.NET Core API |
 Datastorage Google Firestore Cloud
 
-For MVP
+
 Unittests going to be added in Frontend before going on further with development.
 "Calculation Learning" API to be added in Backend.
 
