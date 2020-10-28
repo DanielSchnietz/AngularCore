@@ -16,10 +16,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DifferencecalculationComponent } from './differencecalculation/differencecalculation.component';
-import { RetailcalculationComponent } from './retailcalculation/retailcalculation.component';
-import { LearningbotComponent } from './learningbot/learningbot.component';
-import { RecalculationComponent } from './recalculation/recalculation.component';
 import { MatCardModule } from '@angular/material/card';
 import { FooterComponent } from './footer/footer.component';
 import { CalculationOutputComponent } from './calculation-output/calculation-output.component'
@@ -34,10 +30,6 @@ import { CalculationOutputComponent } from './calculation-output/calculation-out
     CounterComponent,
     FetchDataComponent,
     CalculationComponent,
-    DifferencecalculationComponent,
-    RetailcalculationComponent,
-    LearningbotComponent,
-    RecalculationComponent,
     FooterComponent,
     CalculationOutputComponent
     
