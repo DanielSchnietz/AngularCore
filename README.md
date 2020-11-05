@@ -18,4 +18,5 @@ Additional features that are coming later in the development process:
 The User can change his previous made Calculations.
 The User can login.
 The User has his own Menu for Configuration e.g. the "Calculation Learning" API.
+The User will be supported by AI in further future  .
 More features to be added...
