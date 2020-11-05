@@ -7,6 +7,7 @@ using Google.Cloud.Firestore;
 namespace AngularWebApp.Services
 {
     [FirestoreData]
+    // firestoreproperties can be removed as calculationdbdto was added for this purpose
     public class CalculationDetailDTO
     {
         [FirestoreProperty]

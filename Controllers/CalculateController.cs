@@ -13,7 +13,6 @@ namespace AngularWebApp.Controllers
     {
 
         [HttpPost]
-        //JSON Formatierung hinzufügen
         public async Task<IActionResult> AddNewCalculation([FromBody] InputObject content)
         {
             if(content == null)
@@ -28,6 +27,9 @@ namespace AngularWebApp.Controllers
 
 
         }
+        // need to add json.serialize to the following responses.
+        // putting the check for empy responses ( badrequest ) in additional class to avoid duplicate code
+        // and better testing and debugging
         [HttpGet]
         public async Task<IActionResult> GetAllCalculations()
         {

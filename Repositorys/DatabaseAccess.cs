@@ -35,6 +35,8 @@ namespace AngularWebApp.Repositorys
             return output;
         }
 
+        // some methods are not finished yet.
+        // this will be done soon
         public async Task<CalculationDetailDTO> GetCalculationById(string Id)
         {
             FirestoreDb db = FirestoreDb.Create(Project);
