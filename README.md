@@ -12,6 +12,7 @@ Extra class for checking responses will be added.
 Json serialisation will be added to more responses.  
 Extra folder for DTO´s will be added.  
 Models will be completed ( e.g. adding more than just required). 
+Interfaces will be added .  
 
 
 
