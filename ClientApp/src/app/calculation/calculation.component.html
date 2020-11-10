@@ -226,7 +226,7 @@
   </form>
 
 </div>
-<app-calculation-output [calculation$] ="calculation$"></app-calculation-output>
+<app-calculation-output *ngIf="calculation$" [calculation$] ="calculation$"></app-calculation-output>
 
 
 

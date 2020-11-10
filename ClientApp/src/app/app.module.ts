@@ -18,7 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { FooterComponent } from './footer/footer.component';
-import { CalculationOutputComponent } from './calculation-output/calculation-output.component'
+import { CalculationOutputComponent } from './calculation-output/calculation-output.component';
+import { MatTableModule } from '@angular/material/table';
 
 
 
@@ -45,6 +46,7 @@ import { CalculationOutputComponent } from './calculation-output/calculation-out
     MatButtonModule,
     ReactiveFormsModule,
     MatCardModule,
+    MatTableModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },

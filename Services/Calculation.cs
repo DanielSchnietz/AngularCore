@@ -24,6 +24,11 @@ namespace AngularWebApp.Services
 
         public virtual double Multiply(double firstNumber, double secondNumber)
         {
+            //check if one value is 0 to avoid multiplying by 0
+            if(firstNumber == 0 || secondNumber == 0)
+            {
+                return firstNumber == 0 ? secondNumber : firstNumber;
+            }
             return firstNumber * secondNumber;
         }
 
