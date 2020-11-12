@@ -31,7 +31,7 @@ namespace AngularWebApp.Controllers
         // putting the check for empy responses ( badrequest ) in additional class to avoid duplicate code
         // and better testing and debugging
         [HttpGet]
-        public async Task<IActionResult> GetAllCalculations()
+        public IActionResult GetAllCalculations()
         {
             var db = new DatabaseAccess();
             var calculation =  db.GetCalculation();
