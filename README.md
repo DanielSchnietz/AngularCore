@@ -8,6 +8,7 @@ To Do:
 add more classes,  
 add interfaces,  
 start learning api  
+add automapper to make hardcoded mapping unnecessary  
 
 
 
