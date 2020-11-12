@@ -2,8 +2,15 @@
 Frontend with Angular and Angular Material |
 Backend C#.NET Core API |
 Datastorage Google Firestore Cloud
+Next day to work on 13.11  
 
-This Project is paused till 09.11.2020 and will be continued.  
+To Do:  
+add more classes,  
+add interfaces,  
+start learning api  
+
+
+
 There is still a lot of work to do, but you should be able to get some first impressions on how i´m working and whats my goal with this app.  
 
 Unittests going to be added in Frontend before going on further with development.
