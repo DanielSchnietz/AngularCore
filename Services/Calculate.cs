@@ -31,7 +31,6 @@ namespace AngularWebApp.Services
         {
             var data = new DatabaseAccess();
             //var calcOverhead = new PercentageCalculation();
-            var calcCost = new Calculation();
             var matDirect = CalcDirectCost(input.Items);
             var prodDirect = CalcDirectCost(input.Steps);
             var calculation = new CalculationDbDTO();
@@ -40,30 +39,30 @@ namespace AngularWebApp.Services
             calculation.ProductionDirectCost = prodDirect;
             calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
             calculation.ProductionOverheadPercentage = input.ProductionOverheadPercentage;
-            calculation.MaterialOverhead = calcCost.Multiply(calculation.MaterialDirectCost, input.MaterialOverheadPercentage) / 100;
-            calculation.ProductionOverhead = calcCost.Multiply(calculation.ProductionDirectCost, input.ProductionOverheadPercentage) / 100;
-            calculation.MaterialCost = calcCost.Add(calculation.MaterialDirectCost, calculation.MaterialOverhead);
-            calculation.ProductionCost =calcCost.Add (calculation.ProductionDirectCost, calculation.ProductionOverhead);
-            calculation.ManufacturingCost = calcCost.Add(calculation.MaterialCost, calculation.ProductionCost);
-            calculation.AdministrativeOverhead = calcCost.Multiply(calculation.ManufacturingCost, input.AdministrativeOverheadPercentage)/100;
+            calculation.MaterialOverhead = Calculation.Multiply(calculation.MaterialDirectCost, input.MaterialOverheadPercentage) / 100;
+            calculation.ProductionOverhead = Calculation.Multiply(calculation.ProductionDirectCost, input.ProductionOverheadPercentage) / 100;
+            calculation.MaterialCost = Calculation.Add(calculation.MaterialDirectCost, calculation.MaterialOverhead);
+            calculation.ProductionCost = Calculation.Add (calculation.ProductionDirectCost, calculation.ProductionOverhead);
+            calculation.ManufacturingCost = Calculation.Add(calculation.MaterialCost, calculation.ProductionCost);
+            calculation.AdministrativeOverhead = Calculation.Multiply(calculation.ManufacturingCost, input.AdministrativeOverheadPercentage)/100;
             calculation.AdministrativeOverheadPercentage = input.AdministrativeOverheadPercentage;
-            calculation.SellingExpenses = calcCost.Multiply(calculation.ManufacturingCost, input.SellingExpensesPercentage)/100;
+            calculation.SellingExpenses = Calculation.Multiply(calculation.ManufacturingCost, input.SellingExpensesPercentage)/100;
             calculation.SellingExpensesPercentage = input.SellingExpensesPercentage;
-            calculation.SelfCost = calcCost.Add(calculation.ManufacturingCost, calculation.AdministrativeOverhead, calculation.SellingExpenses);
-            calculation.Profit = calcCost.Multiply(calculation.SelfCost, input.ProfitMarkup)/100;
+            calculation.SelfCost = Calculation.Add(calculation.ManufacturingCost, calculation.AdministrativeOverhead, calculation.SellingExpenses);
+            calculation.Profit = Calculation.Multiply(calculation.SelfCost, input.ProfitMarkup)/100;
             calculation.ProfitMarkup = input.ProfitMarkup;
-            calculation.CashSalePrice = calcCost.Add(calculation.SelfCost, calculation.Profit);
-            calculation.CashDiscount = calcCost.Multiply(calculation.CashSalePrice, input.CashDiscountPercentage)/100;
+            calculation.CashSalePrice = Calculation.Add(calculation.SelfCost, calculation.Profit);
+            calculation.CashDiscount = Calculation.Multiply(calculation.CashSalePrice, input.CashDiscountPercentage)/100;
             calculation.CashDiscountPercentage = input.CashDiscountPercentage;
-            calculation.AgentsCommission = calcCost.Multiply(calculation.CashSalePrice, input.AdministrativeOverheadPercentage)/100;
+            calculation.AgentsCommission = Calculation.Multiply(calculation.CashSalePrice, input.AdministrativeOverheadPercentage)/100;
             calculation.AgentsCommissionPercentage = input.AgentsCommissionPercentage;
-            calculation.TargetSalePrice = calcCost.Add(calculation.CashSalePrice, calculation.CashDiscount, calculation.AgentsCommission);
-            calculation.CustomerDiscount = calcCost.Multiply(calculation.TargetSalePrice, input.CustomerDiscountPercentage)/100;
+            calculation.TargetSalePrice = Calculation.Add(calculation.CashSalePrice, calculation.CashDiscount, calculation.AgentsCommission);
+            calculation.CustomerDiscount = Calculation.Multiply(calculation.TargetSalePrice, input.CustomerDiscountPercentage)/100;
             calculation.CustomerDiscountPercentage = input.CustomerDiscountPercentage;
-            calculation.ListPrice = calcCost.Add(calculation.TargetSalePrice, calculation.CustomerDiscount);
-            calculation.SalesTax = calcCost.Multiply(calculation.ListPrice, input.SalesTaxPercentage)/100;
+            calculation.ListPrice = Calculation.Add(calculation.TargetSalePrice, calculation.CustomerDiscount);
+            calculation.SalesTax = Calculation.Multiply(calculation.ListPrice, input.SalesTaxPercentage)/100;
             calculation.SalesTaxPercentage = input.SalesTaxPercentage;
-            calculation.OfferPrice = calcCost.Add(calculation.ListPrice, calculation.SalesTax);
+            calculation.OfferPrice = Calculation.Add(calculation.ListPrice, calculation.SalesTax);
 
 
 
