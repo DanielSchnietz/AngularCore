@@ -34,7 +34,7 @@ namespace AngularWebApp.Controllers
         public async Task<IActionResult> GetAllCalculations()
         {
             var db = new DatabaseAccess();
-            var calculation = await db.GetCalculation();
+            var calculation =  db.GetCalculation();
             if (calculation == null)
             {
                 return BadRequest("No calculation found");

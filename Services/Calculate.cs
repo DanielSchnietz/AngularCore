@@ -27,9 +27,8 @@ namespace AngularWebApp.Services
             await db.ChangeCalculationById(Id, calculation );
         }
     
-        public static CalculationDbDTO ForwardCalculation(InputObject input)
+        private static CalculationDbDTO ForwardCalculation(InputObject input)
         {
-            var data = new DatabaseAccess();
             //var calcOverhead = new PercentageCalculation();
             var matDirect = CalcDirectCost(input.Items);
             var prodDirect = CalcDirectCost(input.Steps);
@@ -78,18 +77,12 @@ namespace AngularWebApp.Services
 
         private static double CalcDirectCost(dynamic obj)
         {
-            //double result;
-            //var task = Task.Run(() =>
-            //{
-                var calc = new Calculation();
                 double res = 0;
                 foreach (var item in obj)
                 {
-                    res += calc.Multiply(item.Price, item.Amount);
+                    res += Calculation.Multiply(item.Price, item.Amount);
                 };
                 return res;
-            //});
-            //return task;
         }
     }
 }

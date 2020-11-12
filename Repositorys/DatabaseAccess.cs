@@ -18,9 +18,8 @@ namespace AngularWebApp.Repositorys
             Project = "angularcore-37326";
         }
 
-        public async Task<List<CalculationDetailDTO>> GetCalculation()
+        public async IAsyncEnumerable<CalculationDetailDTO> GetCalculation()
         {
-            List<CalculationDetailDTO> output = new List<CalculationDetailDTO>();
             FirestoreDb db = FirestoreDb.Create(Project);
             CollectionReference collection = db.Collection("Calculations");
             QuerySnapshot snapshot = await collection.GetSnapshotAsync();
@@ -29,10 +28,9 @@ namespace AngularWebApp.Repositorys
             {
                 var item = document.ConvertTo<CalculationDetailDTO>();
                 item.Id = snapshot[index].Id;
-                output.Add(item);
                 index++;
+                yield return item;
             }
-            return output;
         }
 
         // some methods are not finished yet.
