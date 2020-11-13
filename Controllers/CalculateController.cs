@@ -4,6 +4,7 @@ using AngularWebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using AngularWebApp.Repositorys;
+using System.Collections.Generic;
 
 namespace AngularWebApp.Controllers
 {
@@ -15,13 +16,18 @@ namespace AngularWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> AddNewCalculation([FromBody] InputObject content)
         {
+            //will be put in middleware
             if(content == null)
             {
                 return BadRequest("Calculation Object is null");
             }
+            else if(!ModelState.IsValid)
+            {
+                return BadRequest("ModelState is not valid");
+            }
             else
             {
-                var response = await CalculationService.CreateForwardCalculation(content);
+                var response = await CalculationService.CreateCalculation(content);
                 return Created($"api/calculate/{response.Id}", JsonConvert.SerializeObject(response));
             }
 
@@ -31,15 +37,15 @@ namespace AngularWebApp.Controllers
         // putting the check for empy responses ( badrequest ) in additional class to avoid duplicate code
         // and better testing and debugging
         [HttpGet]
-        public IActionResult GetAllCalculations()
+        public async Task<IActionResult> GetAllCalculations()
         {
             var db = new DatabaseAccess();
-            var calculation =  db.GetCalculation();
+            var calculation =  await db.GetCalculation();
             if (calculation == null)
             {
-                return BadRequest("No calculation found");
+                return NotFound("No calculation found");
             }
-            return Ok(calculation);
+            return Ok(JsonConvert.SerializeObject(calculation));
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCalculationById(string id)
@@ -49,9 +55,9 @@ namespace AngularWebApp.Controllers
             var calculation = await db.GetCalculationById(id);
             if (calculation == null)
             {
-                return BadRequest($"No calculation with Id {id} found");
+                return NotFound($"No calculation with Id {id} found");
             }
-            return Ok(calculation);
+            return Ok(JsonConvert.SerializeObject(calculation));
         }
        [HttpDelete("{id}")]
        public async Task<ActionResult> DeleteCalculation(string id)

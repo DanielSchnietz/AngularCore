@@ -8,13 +8,26 @@ namespace AngularWebApp.Services
 {
     public static class CalculationService
     {
-        public static async Task<CalculationDetailDTO> CreateForwardCalculation( InputObject input)
+        public static async Task<CalculationDetailDTO> CreateCalculation( InputObject input)
         {
-            var forward = new ForwardCalculation();
-            var calc = forward.CalculateCalculation(input);
-            var mappedCalc = MapToDbDTO(calc);
-            return await GetDbResponse(mappedCalc);
+            dynamic calculation = new ForwardCalculation();
+            switch (input.KindOfCalculation)
+            {
+                case "Backwards":
+                    calculation = new BackwardsCalculation();
+                    break;
+                case "Difference":
+                    calculation =  new DifferenceCalculation();
+                    break;
+                default: 
+                    calculation = new ForwardCalculation();
+                    break;
+            }
+            var calc = MapToDbDTO(calculation.CalculateCalculation(input));
+            return await GetDbResponse(calc);
         }
+
+
 
         public static async Task UpdateCalculation(string id, InputObject input)
         {

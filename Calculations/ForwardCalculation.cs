@@ -7,8 +7,6 @@ namespace AngularWebApp.Services
 {
     public class ForwardCalculation : Calculation
     {
-
-
         public override Calculation CalculateCalculation(InputObject input)
         {
             var matDirect = CalculationService.CalcDirectCost(input.Items);

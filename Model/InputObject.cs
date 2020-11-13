@@ -8,6 +8,9 @@ namespace AngularWebApp.Services
 {
     public class InputObject
     {
+        //more validations will be added
+        [Required]
+        public string KindOfCalculation { get; set;}
         [Required]
         public Item[] Items { get; set; }
         [Required]

@@ -22,19 +22,21 @@ namespace AngularWebApp.Repositorys
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
         }
 
-        public async IAsyncEnumerable<CalculationDetailDTO> GetCalculation()
+        public async Task<List<CalculationDetailDTO>> GetCalculation()
         {
             FirestoreDb db = FirestoreDb.Create(Project);
             CollectionReference collection = db.Collection("Calculations");
             QuerySnapshot snapshot = await collection.GetSnapshotAsync();
             var index = 0;
+            var response = new List<CalculationDetailDTO>();
             foreach ( DocumentSnapshot document in snapshot.Documents)
             {
                 var item = document.ConvertTo<CalculationDetailDTO>();
                 item.Id = snapshot[index].Id;
+                response.Add(item);
                 index++;
-                yield return item;
             }
+            return response;
         }
 
         // some methods are not finished yet.
