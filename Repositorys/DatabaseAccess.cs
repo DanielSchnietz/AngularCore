@@ -10,12 +10,16 @@ namespace AngularWebApp.Repositorys
 {
     public class DatabaseAccess
     {
-        private readonly string Project;
+        private readonly string Project = "angularcore-37326";
 
         public DatabaseAccess() {
+            CreateDbConnection();
+        }
+
+        private void CreateDbConnection()
+        {
             string path = AppDomain.CurrentDomain.BaseDirectory + @"angularcore.json";
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
-            Project = "angularcore-37326";
         }
 
         public async IAsyncEnumerable<CalculationDetailDTO> GetCalculation()

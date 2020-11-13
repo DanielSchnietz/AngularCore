@@ -21,7 +21,7 @@ namespace AngularWebApp.Controllers
             }
             else
             {
-                var response = await Calculate.CreateCalculation(content);
+                var response = await CalculationService.CreateForwardCalculation(content);
                 return Created($"api/calculate/{response.Id}", JsonConvert.SerializeObject(response));
             }
 

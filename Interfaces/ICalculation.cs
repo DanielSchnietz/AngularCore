@@ -1,17 +1,12 @@
-﻿using AngularWebApp.Interfaces;
-using AngularWebApp.Repositorys;
+﻿using AngularWebApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
-namespace AngularWebApp.Services
+namespace AngularWebApp.Interfaces
 {
-    public class Calculation : ICalculation
+    interface ICalculation
     {
         public double MaterialDirectCost { get; set; }
         public double MaterialOverheadPercentage { get; set; }
@@ -42,12 +37,7 @@ namespace AngularWebApp.Services
         public double SalesTaxPercentage { get; set; }
         public double OfferPrice { get; set; }
 
-        public virtual Calculation CalculateCalculation(InputObject input)
-        {
-            Calculation calculation = new Calculation();
-            return calculation;
-        }
+        Calculation CalculateCalculation(InputObject input);
 
-            
     }
 }
