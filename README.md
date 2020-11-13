@@ -6,6 +6,7 @@ Next day to work on 13.11
 
 To Do:  
 refacturing of services, as they are not object oriented,  
+make more classmembers private,  
 add more classes,  
 add interfaces,  
 start learning api  
