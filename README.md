@@ -5,10 +5,14 @@ Datastorage Google Firestore Cloud
 Next day to work on 13.11  
 
 To Do:  
+refacturing of services,    
+controller needs to be updated,  
+make more classmembers private,  
 add more classes,  
 add interfaces,  
 start learning api  
-add automapper to make hardcoded mapping unnecessary  
+add automapper to make hardcoded mapping unnecessary,  
+change calculate and calculation names and change calculation class so its more object oriented,  
 
 
 
