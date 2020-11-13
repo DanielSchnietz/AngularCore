@@ -5,7 +5,8 @@ Datastorage Google Firestore Cloud
 Next day to work on 13.11  
 
 To Do:  
-refacturing of services, as they are not object oriented,  
+refacturing of services,    
+controller needs to be updated,  
 make more classmembers private,  
 add more classes,  
 add interfaces,  
