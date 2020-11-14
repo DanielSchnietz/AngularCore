@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace AngularWebApp.Services
 {
-    public class Calculation : ICalculation
+    public class Calculation
     {
         public double MaterialDirectCost { get; set; }
         public double MaterialOverheadPercentage { get; set; }
@@ -41,13 +41,6 @@ namespace AngularWebApp.Services
         public double SalesTax { get; set; }
         public double SalesTaxPercentage { get; set; }
         public double OfferPrice { get; set; }
-
-        public virtual Calculation CalculateCalculation(InputObject input)
-        {
-            Calculation calculation = new Calculation();
-            return calculation;
-        }
-
-            
+          
     }
 }

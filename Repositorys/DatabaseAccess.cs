@@ -75,5 +75,10 @@ namespace AngularWebApp.Repositorys
             await document.DeleteAsync();
             
         }
+
+        public async Task CheckDbForHint(string[] searchterms)
+        {
+            //logic to search in cloud for any matches
+        }
     }
 }

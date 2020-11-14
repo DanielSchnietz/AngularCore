@@ -1,4 +1,5 @@
-﻿using AngularWebApp.Repositorys;
+﻿using AngularWebApp.Interfaces;
+using AngularWebApp.Repositorys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,35 +9,22 @@ namespace AngularWebApp.Services
 {
     public static class CalculationService
     {
-        public static async Task<CalculationDetailDTO> CreateCalculation( InputObject input)
+        public static async Task<CalculationDetailDTO> CreateCalculation(InputObject input)
         {
-            dynamic calculation = new ForwardCalculation();
-            switch (input.KindOfCalculation)
-            {
-                case "Backwards":
-                    calculation = new BackwardsCalculation();
-                    break;
-                case "Difference":
-                    calculation =  new DifferenceCalculation();
-                    break;
-                default: 
-                    calculation = new ForwardCalculation();
-                    break;
-            }
-            var calc = MapToDbDTO(calculation.CalculateCalculation(input));
+            var func = GetFuncForCalcType(input);
+            var calc = MapToDbDTO(func);
             return await GetDbResponse(calc);
         }
 
 
-
         public static async Task UpdateCalculation(string id, InputObject input)
         {
-            var forward = new ForwardCalculation();
-            var calc = MapToDbDTO(forward.CalculateCalculation(input));
+            var func = GetFuncForCalcType(input);
+            var calc = MapToDbDTO(func);
             await GetDbResponse(id, calc);
         }
 
-        public static double CalcDirectCost(dynamic obj)
+        private static double CalcDirectCost(dynamic obj)
         {
             double res = 0;
             foreach (var item in obj)
@@ -56,6 +44,122 @@ namespace AngularWebApp.Services
         {
             var db = new DatabaseAccess();
             return await db.ChangeCalculationById(Id, calc);
+        }
+
+        private static Calculation GetFuncForCalcType(InputObject input) =>
+            input.KindOfCalculation switch
+            {
+                "Backwards" => CalculateCalculationBackwards(input),
+                "Difference" => CalculateCalculationDifference(input),
+                _ => CalculateCalculationForward(input)
+            };
+
+
+        private static Calculation CalculateCalculationForward(InputObject input)
+        {
+            Calculation calculation = new Calculation();
+            calculation.MaterialDirectCost = CalculationService.CalcDirectCost(input.Items);
+            calculation.ProductionDirectCost = CalculationService.CalcDirectCost(input.Steps);
+            calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
+            calculation.ProductionOverheadPercentage = input.ProductionOverheadPercentage;
+            calculation.MaterialOverhead = Calculate.Multiply(calculation.MaterialDirectCost, input.MaterialOverheadPercentage) / 100;
+            calculation.ProductionOverhead = Calculate.Multiply(calculation.ProductionDirectCost, input.ProductionOverheadPercentage) / 100;
+            calculation.MaterialCost = Calculate.Add(calculation.MaterialDirectCost, calculation.MaterialOverhead);
+            calculation.ProductionCost = Calculate.Add(calculation.ProductionDirectCost, calculation.ProductionOverhead);
+            calculation.ManufacturingCost = Calculate.Add(calculation.MaterialCost, calculation.ProductionCost);
+            calculation.AdministrativeOverhead = Calculate.Multiply(calculation.ManufacturingCost, input.AdministrativeOverheadPercentage) / 100;
+            calculation.AdministrativeOverheadPercentage = input.AdministrativeOverheadPercentage;
+            calculation.SellingExpenses = Calculate.Multiply(calculation.ManufacturingCost, input.SellingExpensesPercentage) / 100;
+            calculation.SellingExpensesPercentage = input.SellingExpensesPercentage;
+            calculation.SelfCost = Calculate.Add(calculation.ManufacturingCost, calculation.AdministrativeOverhead, calculation.SellingExpenses);
+            calculation.Profit = Calculate.Multiply(calculation.SelfCost, input.ProfitMarkup) / 100;
+            calculation.ProfitMarkup = input.ProfitMarkup;
+            calculation.CashSalePrice = Calculate.Add(calculation.SelfCost, calculation.Profit);
+            calculation.CashDiscount = Calculate.Multiply(calculation.CashSalePrice, input.CashDiscountPercentage) / 100;
+            calculation.CashDiscountPercentage = input.CashDiscountPercentage;
+            calculation.AgentsCommission = Calculate.Multiply(calculation.CashSalePrice, input.AdministrativeOverheadPercentage) / 100;
+            calculation.AgentsCommissionPercentage = input.AgentsCommissionPercentage;
+            calculation.TargetSalePrice = Calculate.Add(calculation.CashSalePrice, calculation.CashDiscount, calculation.AgentsCommission);
+            calculation.CustomerDiscount = Calculate.Multiply(calculation.TargetSalePrice, input.CustomerDiscountPercentage) / 100;
+            calculation.CustomerDiscountPercentage = input.CustomerDiscountPercentage;
+            calculation.ListPrice = Calculate.Add(calculation.TargetSalePrice, calculation.CustomerDiscount);
+            calculation.SalesTax = Calculate.Multiply(calculation.ListPrice, input.SalesTaxPercentage) / 100;
+            calculation.SalesTaxPercentage = input.SalesTaxPercentage;
+            calculation.OfferPrice = Calculate.Add(calculation.ListPrice, calculation.SalesTax);
+
+            return calculation;
+        }
+
+        // the two following methods will be changed to calculate the right way
+        // they are just copies of the forward one for now
+        private static Calculation CalculateCalculationBackwards(InputObject input)
+        {
+            Calculation calculation = new Calculation();
+            calculation.MaterialDirectCost = CalculationService.CalcDirectCost(input.Items);
+            calculation.ProductionDirectCost = CalculationService.CalcDirectCost(input.Steps);
+            calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
+            calculation.ProductionOverheadPercentage = input.ProductionOverheadPercentage;
+            calculation.MaterialOverhead = Calculate.Multiply(calculation.MaterialDirectCost, input.MaterialOverheadPercentage) / 100;
+            calculation.ProductionOverhead = Calculate.Multiply(calculation.ProductionDirectCost, input.ProductionOverheadPercentage) / 100;
+            calculation.MaterialCost = Calculate.Add(calculation.MaterialDirectCost, calculation.MaterialOverhead);
+            calculation.ProductionCost = Calculate.Add(calculation.ProductionDirectCost, calculation.ProductionOverhead);
+            calculation.ManufacturingCost = Calculate.Add(calculation.MaterialCost, calculation.ProductionCost);
+            calculation.AdministrativeOverhead = Calculate.Multiply(calculation.ManufacturingCost, input.AdministrativeOverheadPercentage) / 100;
+            calculation.AdministrativeOverheadPercentage = input.AdministrativeOverheadPercentage;
+            calculation.SellingExpenses = Calculate.Multiply(calculation.ManufacturingCost, input.SellingExpensesPercentage) / 100;
+            calculation.SellingExpensesPercentage = input.SellingExpensesPercentage;
+            calculation.SelfCost = Calculate.Add(calculation.ManufacturingCost, calculation.AdministrativeOverhead, calculation.SellingExpenses);
+            calculation.Profit = Calculate.Multiply(calculation.SelfCost, input.ProfitMarkup) / 100;
+            calculation.ProfitMarkup = input.ProfitMarkup;
+            calculation.CashSalePrice = Calculate.Add(calculation.SelfCost, calculation.Profit);
+            calculation.CashDiscount = Calculate.Multiply(calculation.CashSalePrice, input.CashDiscountPercentage) / 100;
+            calculation.CashDiscountPercentage = input.CashDiscountPercentage;
+            calculation.AgentsCommission = Calculate.Multiply(calculation.CashSalePrice, input.AdministrativeOverheadPercentage) / 100;
+            calculation.AgentsCommissionPercentage = input.AgentsCommissionPercentage;
+            calculation.TargetSalePrice = Calculate.Add(calculation.CashSalePrice, calculation.CashDiscount, calculation.AgentsCommission);
+            calculation.CustomerDiscount = Calculate.Multiply(calculation.TargetSalePrice, input.CustomerDiscountPercentage) / 100;
+            calculation.CustomerDiscountPercentage = input.CustomerDiscountPercentage;
+            calculation.ListPrice = Calculate.Add(calculation.TargetSalePrice, calculation.CustomerDiscount);
+            calculation.SalesTax = Calculate.Multiply(calculation.ListPrice, input.SalesTaxPercentage) / 100;
+            calculation.SalesTaxPercentage = input.SalesTaxPercentage;
+            calculation.OfferPrice = Calculate.Add(calculation.ListPrice, calculation.SalesTax);
+
+            return calculation;
+        }
+
+        private static Calculation CalculateCalculationDifference(InputObject input)
+        {
+            Calculation calculation = new Calculation();
+            calculation.MaterialDirectCost = CalculationService.CalcDirectCost(input.Items);
+            calculation.ProductionDirectCost = CalculationService.CalcDirectCost(input.Steps);
+            calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
+            calculation.ProductionOverheadPercentage = input.ProductionOverheadPercentage;
+            calculation.MaterialOverhead = Calculate.Multiply(calculation.MaterialDirectCost, input.MaterialOverheadPercentage) / 100;
+            calculation.ProductionOverhead = Calculate.Multiply(calculation.ProductionDirectCost, input.ProductionOverheadPercentage) / 100;
+            calculation.MaterialCost = Calculate.Add(calculation.MaterialDirectCost, calculation.MaterialOverhead);
+            calculation.ProductionCost = Calculate.Add(calculation.ProductionDirectCost, calculation.ProductionOverhead);
+            calculation.ManufacturingCost = Calculate.Add(calculation.MaterialCost, calculation.ProductionCost);
+            calculation.AdministrativeOverhead = Calculate.Multiply(calculation.ManufacturingCost, input.AdministrativeOverheadPercentage) / 100;
+            calculation.AdministrativeOverheadPercentage = input.AdministrativeOverheadPercentage;
+            calculation.SellingExpenses = Calculate.Multiply(calculation.ManufacturingCost, input.SellingExpensesPercentage) / 100;
+            calculation.SellingExpensesPercentage = input.SellingExpensesPercentage;
+            calculation.SelfCost = Calculate.Add(calculation.ManufacturingCost, calculation.AdministrativeOverhead, calculation.SellingExpenses);
+            calculation.Profit = Calculate.Multiply(calculation.SelfCost, input.ProfitMarkup) / 100;
+            calculation.ProfitMarkup = input.ProfitMarkup;
+            calculation.CashSalePrice = Calculate.Add(calculation.SelfCost, calculation.Profit);
+            calculation.CashDiscount = Calculate.Multiply(calculation.CashSalePrice, input.CashDiscountPercentage) / 100;
+            calculation.CashDiscountPercentage = input.CashDiscountPercentage;
+            calculation.AgentsCommission = Calculate.Multiply(calculation.CashSalePrice, input.AdministrativeOverheadPercentage) / 100;
+            calculation.AgentsCommissionPercentage = input.AgentsCommissionPercentage;
+            calculation.TargetSalePrice = Calculate.Add(calculation.CashSalePrice, calculation.CashDiscount, calculation.AgentsCommission);
+            calculation.CustomerDiscount = Calculate.Multiply(calculation.TargetSalePrice, input.CustomerDiscountPercentage) / 100;
+            calculation.CustomerDiscountPercentage = input.CustomerDiscountPercentage;
+            calculation.ListPrice = Calculate.Add(calculation.TargetSalePrice, calculation.CustomerDiscount);
+            calculation.SalesTax = Calculate.Multiply(calculation.ListPrice, input.SalesTaxPercentage) / 100;
+            calculation.SalesTaxPercentage = input.SalesTaxPercentage;
+            calculation.OfferPrice = Calculate.Add(calculation.ListPrice, calculation.SalesTax);
+
+            return calculation;
         }
 
         // will be replaced with AutoMapper later

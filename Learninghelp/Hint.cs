@@ -7,5 +7,7 @@ namespace AngularWebApp.Learninghelp
 {
     public class Hint
     {
+        public string[] Suggestions { get; set; }
+        public string[] Hints { get; set; }
     }
 }

@@ -37,7 +37,6 @@ namespace AngularWebApp.Interfaces
         public double SalesTaxPercentage { get; set; }
         public double OfferPrice { get; set; }
 
-        Calculation CalculateCalculation(InputObject input);
 
     }
 }

@@ -10,9 +10,8 @@ namespace AngularWebApp.Services
         //normalize data and filter cloud for this data to respond with hints to ask questions 
         private string NormalizeData(string data)
         {
-            //add more steps to get accurate search results
             var normalizedSearchTerm = data.ToLower();
-
+           // DatabaseAccess.CheckDbForHint(normalizedSearchTerm.Split(" "));
             return normalizedSearchTerm;
         }
     }

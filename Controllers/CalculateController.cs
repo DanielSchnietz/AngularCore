@@ -16,7 +16,7 @@ namespace AngularWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> AddNewCalculation([FromBody] InputObject content)
         {
-            //will be put in middleware
+            //will be put in middleware/seperate class
             if(content == null)
             {
                 return BadRequest("Calculation Object is null");
@@ -72,5 +72,7 @@ namespace AngularWebApp.Controllers
          //   var db = new DatabaseAccess();
          //   await db.ChangeCalculationById(id, calculation);
        // }
+
+        //get request for hints
     }
 }
