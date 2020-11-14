@@ -3,6 +3,8 @@ Frontend with Angular and Angular Material |
 Backend C#.NET Core API |
 Datastorage Google Firestore Cloud
 
+Managed with Clubhouse Kanban
+
 
 To Do:  
 refacturing of services,    
