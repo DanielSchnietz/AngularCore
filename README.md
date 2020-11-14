@@ -2,7 +2,7 @@
 Frontend with Angular and Angular Material |
 Backend C#.NET Core API |
 Datastorage Google Firestore Cloud
-Next day to work on 13.11  
+
 
 To Do:  
 refacturing of services,    
