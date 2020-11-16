@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AngularWebApp.Learninghelp;
 using AngularWebApp.Services;
 using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Mvc;
@@ -76,9 +77,12 @@ namespace AngularWebApp.Repositorys
             
         }
 
-        public async Task CheckDbForHint(string[] searchterms)
+        public async Task<Hint> CheckDbForHint(string[] searchterms)
         {
+
             //logic to search in cloud for any matches
+            //just placeholder for now
+            return new Hint();
         }
     }
 }

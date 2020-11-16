@@ -16,7 +16,7 @@ namespace AngularWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> AddNewCalculation([FromBody] InputObject content)
         {
-            //will be put in middleware/seperate class
+            //will be put in seperate class
             if(content == null)
             {
                 return BadRequest("Calculation Object is null");
@@ -34,7 +34,7 @@ namespace AngularWebApp.Controllers
 
         }
         // need to add json.serialize to the following responses.
-        // putting the check for empy responses ( badrequest ) in additional class to avoid duplicate code
+        // putting the check for empty responses ( badrequest ) in additional class to avoid duplicate code
         // and better testing and debugging
         [HttpGet]
         public async Task<IActionResult> GetAllCalculations()
@@ -45,8 +45,10 @@ namespace AngularWebApp.Controllers
             {
                 return NotFound("No calculation found");
             }
-            return Ok(JsonConvert.SerializeObject(calculation));
+            //  return Ok(JsonConvert.SerializeObject(calculation));
+            return Ok();
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCalculationById(string id)
         {

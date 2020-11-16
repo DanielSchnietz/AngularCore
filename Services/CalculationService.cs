@@ -11,17 +11,17 @@ namespace AngularWebApp.Services
     {
         public static async Task<CalculationDetailDTO> CreateCalculation(InputObject input)
         {
-            var func = GetFuncForCalcType(input);
-            var calc = MapToDbDTO(func);
-            return await GetDbResponse(calc);
+            var calc = GetCalculationObject(input, new Calculation());
+            var calcDTO = MapToDbDTO(calc);
+            return await GetDbResponse(calcDTO);
         }
 
 
         public static async Task UpdateCalculation(string id, InputObject input)
         {
-            var func = GetFuncForCalcType(input);
-            var calc = MapToDbDTO(func);
-            await GetDbResponse(id, calc);
+            var calc = GetCalculationObject(input, new Calculation());
+            var calcDTO = MapToDbDTO(calc);
+            await GetDbResponse(id, calcDTO);
         }
 
         private static double CalcDirectCost(dynamic obj)
@@ -46,18 +46,17 @@ namespace AngularWebApp.Services
             return await db.ChangeCalculationById(Id, calc);
         }
 
-        private static Calculation GetFuncForCalcType(InputObject input) =>
+        private static Calculation GetCalculationObject(InputObject input, Calculation calculation) =>
             input.KindOfCalculation switch
             {
-                "Backwards" => CalculateCalculationBackwards(input),
-                "Difference" => CalculateCalculationDifference(input),
-                _ => CalculateCalculationForward(input)
+                "Backwards" => CalculateCalculationBackwards(input, calculation),
+                "Difference" => CalculateCalculationDifference(input, calculation),
+                _ => CalculateCalculationForward(input, calculation)
             };
 
 
-        private static Calculation CalculateCalculationForward(InputObject input)
+        private static Calculation CalculateCalculationForward(InputObject input, Calculation calculation)
         {
-            Calculation calculation = new Calculation();
             calculation.MaterialDirectCost = CalculationService.CalcDirectCost(input.Items);
             calculation.ProductionDirectCost = CalculationService.CalcDirectCost(input.Steps);
             calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
@@ -92,9 +91,8 @@ namespace AngularWebApp.Services
 
         // the two following methods will be changed to calculate the right way
         // they are just copies of the forward one for now
-        private static Calculation CalculateCalculationBackwards(InputObject input)
+        private static Calculation CalculateCalculationBackwards(InputObject input, Calculation calculation)
         {
-            Calculation calculation = new Calculation();
             calculation.MaterialDirectCost = CalculationService.CalcDirectCost(input.Items);
             calculation.ProductionDirectCost = CalculationService.CalcDirectCost(input.Steps);
             calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
@@ -127,9 +125,8 @@ namespace AngularWebApp.Services
             return calculation;
         }
 
-        private static Calculation CalculateCalculationDifference(InputObject input)
+        private static Calculation CalculateCalculationDifference(InputObject input, Calculation calculation)
         {
-            Calculation calculation = new Calculation();
             calculation.MaterialDirectCost = CalculationService.CalcDirectCost(input.Items);
             calculation.ProductionDirectCost = CalculationService.CalcDirectCost(input.Steps);
             calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
