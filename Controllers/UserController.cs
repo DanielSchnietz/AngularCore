@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AngularWebApp.Repositorys;
 using AngularWebApp.Services;
 using AngularWebApp.Userclass;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,7 @@ namespace AngularWebApp.Controllers
     public class UserController : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> AddNewUser([FromBody] User user)
+       /* public async Task<IActionResult> AddNewUser([FromBody] User user)
         {
             //will be put in seperate class
             if (user == null)
@@ -28,11 +29,11 @@ namespace AngularWebApp.Controllers
             else
             {
                // var response = await UserService.CreateUser(user);
-                return Created($"api/User/{response.Id}", JsonConvert.SerializeObject(response));
+              //  return Created($"api/User/{response.Id}", JsonConvert.SerializeObject(response));
             }
+       
 
-
-        }
+        }*/
         // need to add json.serialize to the following responses.
         // putting the check for empty responses ( badrequest ) in additional class to avoid duplicate code
         // and better testing and debugging

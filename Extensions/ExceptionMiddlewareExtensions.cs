@@ -15,16 +15,32 @@ namespace AngularWebApp.Extensions
             {
                 appError.Run(async context =>
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.ContentType = "application/json";
-                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-                    if (contextFeature != null)
+                    var exception = context.Features.Get<IExceptionHandlerFeature>();
+                    var statusCode = exception.Error.GetType().Name switch
                     {
-                       // logger.LogError($"Something went wrong: {contextFeature.Error}");
+                        "ArgumentException" => HttpStatusCode.BadRequest,
+                        "ArgumentNullException" => HttpStatusCode.InternalServerError,
+                        _ => HttpStatusCode.ServiceUnavailable
+                    };
+
+
+                    context.Response.StatusCode = (int)statusCode;
+                    context.Response.ContentType = "application/json";
+
+                    if ((int)statusCode == 500)
+                    {
                         await context.Response.WriteAsync(new ErrorDetails()
                         {
-                            StatusCode = context.Response.StatusCode,
+                            StatusCode = (int) statusCode,
                             Message = "Internal Server Error."
+                        }.ToString());
+                    }
+                    else
+                    {
+                        await context.Response.WriteAsync(new ErrorDetails()
+                        {
+                            StatusCode = (int)statusCode,
+                            Message = exception.Error.Message
                         }.ToString());
                     }
                 });

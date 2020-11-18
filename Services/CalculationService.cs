@@ -57,8 +57,8 @@ namespace AngularWebApp.Services
 
         private static Calculation CalculateCalculationForward(InputObject input, Calculation calculation)
         {
-            calculation.MaterialDirectCost = CalculationService.CalcDirectCost(input.Items);
-            calculation.ProductionDirectCost = CalculationService.CalcDirectCost(input.Steps);
+            calculation.MaterialDirectCost = CalcDirectCost(input.Items);
+            calculation.ProductionDirectCost = CalcDirectCost(input.Steps);
             calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
             calculation.ProductionOverheadPercentage = input.ProductionOverheadPercentage;
             calculation.MaterialOverhead = Calculate.Multiply(calculation.MaterialDirectCost, input.MaterialOverheadPercentage) / 100;
@@ -93,8 +93,8 @@ namespace AngularWebApp.Services
         // they are just copies of the forward one for now
         private static Calculation CalculateCalculationBackwards(InputObject input, Calculation calculation)
         {
-            calculation.MaterialDirectCost = CalculationService.CalcDirectCost(input.Items);
-            calculation.ProductionDirectCost = CalculationService.CalcDirectCost(input.Steps);
+            calculation.MaterialDirectCost = CalcDirectCost(input.Items);
+            calculation.ProductionDirectCost = CalcDirectCost(input.Steps);
             calculation.MaterialOverheadPercentage = input.MaterialOverheadPercentage;
             calculation.ProductionOverheadPercentage = input.ProductionOverheadPercentage;
             calculation.MaterialOverhead = Calculate.Multiply(calculation.MaterialDirectCost, input.MaterialOverheadPercentage) / 100;

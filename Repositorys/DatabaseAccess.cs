@@ -28,16 +28,22 @@ namespace AngularWebApp.Repositorys
             FirestoreDb db = FirestoreDb.Create(Project);
             CollectionReference collection = db.Collection("Calculations");
             QuerySnapshot snapshot = await collection.GetSnapshotAsync();
-            var index = 0;
-            var response = new List<CalculationDetailDTO>();
-            foreach ( DocumentSnapshot document in snapshot.Documents)
+            if(snapshot == null)
             {
-                var item = document.ConvertTo<CalculationDetailDTO>();
-                item.Id = snapshot[index].Id;
-                response.Add(item);
-                index++;
+                throw new ArgumentException("No Calculations found");
             }
-            return response;
+            else
+            {
+                var response = new List<CalculationDetailDTO>();
+                var documentsLength = snapshot.Documents.Count;
+                for (var index = 0; index < documentsLength; index++)
+                {
+                    var item = snapshot.Documents[index].ConvertTo<CalculationDetailDTO>();
+                    item.Id = snapshot[index].Id;
+                    response.Add(item);
+                }
+                return response;
+            }
         }
 
         // some methods are not finished yet.
