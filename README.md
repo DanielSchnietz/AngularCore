@@ -14,6 +14,8 @@ To Do:
 -controller needs to be updated,  
 -make more classmembers private,  
 -add more classes,  
+-remove rounding off to two positions behind the decimal point in model  
+-(maybe) changing calculation method to get a solution including reflection and attributes.
 -add interfaces,  
 -start learning api  
 -add automapper to make hardcoded mapping unnecessary,  
