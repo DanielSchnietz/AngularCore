@@ -9,8 +9,7 @@ NOTE: This project serves as a learningproject, so that the code will change fre
 
 To Do:  
 -add custom error classes to print out meaningful messages to the user  
--(maybe) changing error handling from being generally global to try catch blocks and hand over error to middleware to customize messages in json format  
-for better readability
+-(maybe) changing error handling from being generally global to try catch blocks and hand over error to middleware to customize messages in json format for better readability  
 -refacturing of services,    
 -controller needs to be updated,  
 -make more classmembers private,  
